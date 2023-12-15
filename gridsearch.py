@@ -76,3 +76,4 @@ def grid_search(model, input_data, output_data, data_title=None, model_name="",
     current_time = now.strftime("%H:%M:%S")
     model_name = "MLP"
     all_results.to_csv(f"data/results/grid_search_results_{data_title}_{model_name}_{current_time}.csv")
+
