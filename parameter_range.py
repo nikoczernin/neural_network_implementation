@@ -25,8 +25,8 @@ def get_MLP_parameter_ranges(input_data, output_data,
     """
     learning_rate_init_range = (0.001, 0.4)
     alpha_range = tuple(np.logspace(-4, 1, 2))
-    architecture_ranges = get_architecture_ranges(input_data, output_data,
-                                                  complexity_threshold=complexity_threshold)
+    architecture_ranges = get_hidden_layer_architecture_ranges(input_data, output_data,
+                                                               complexity_threshold=complexity_threshold)
     return {
         "activation": activation_functions,
         "solver": solvers,
@@ -37,9 +37,9 @@ def get_MLP_parameter_ranges(input_data, output_data,
     }
 
 
-def get_architecture_ranges(input_data, output_data, complexity_threshold=50):
+def get_hidden_layer_architecture_ranges(input_data, output_data, complexity_threshold=50):
     """
-    Get a list of possible architectures for a given dataset
+    Get a list of possible parameter for a given dataset
     :param input_data: Pandas dataframe with input data
     :param output_data: Panda series with output data
     :param complexity_threshold: The amount of features or classes to consider a dataset complex
@@ -72,10 +72,10 @@ def get_architecture_ranges(input_data, output_data, complexity_threshold=50):
     }
 
 
-def get_architecture_suggestions(input_data, output_data,
-                                 n_neurons_steps=5, complexity_threshold=50):
+def get_hidden_layer_architecture_suggestions(input_data, output_data,
+                                              n_neurons_steps=5, complexity_threshold=50):
     """
-    Get a list of possible architectures for a given dataset
+    Get a list of possible hidden layer architectures for a given dataset
     :param input_data: Pandas dataframe with input data
     :param output_data: Panda series with output data
     :param n_neurons_steps: Number of steps to take between min and max number of neurons
@@ -88,8 +88,8 @@ def get_architecture_suggestions(input_data, output_data,
     n_features = input_data.shape[1]
     n_classes = output_data.nunique()
 
-    architecture_ranges = get_architecture_ranges(input_data, output_data,
-                                                  complexity_threshold=complexity_threshold)
+    architecture_ranges = get_hidden_layer_architecture_ranges(input_data, output_data,
+                                                               complexity_threshold=complexity_threshold)
     n_neurons_max = architecture_ranges["n_neurons_max"]
     n_neurons_min = architecture_ranges["n_neurons_min"]
     n_hidden_layers = architecture_ranges["n_hidden_layers"]

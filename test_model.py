@@ -47,8 +47,8 @@ def main():
     with open("data/biomed/biomed_y.pickle", "rb") as f:
         y = pickle.load(f)
 
-    print(biomed_x.shape)
-    print(biomed_y.shape)
+    print(x.shape)
+    print(y.shape)
 
     # get the parameters
     # test the model

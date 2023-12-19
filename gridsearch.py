@@ -1,6 +1,7 @@
 import pickle
 import warnings
 from datetime import datetime
+from pprint import pprint
 
 import numpy as np
 import pandas as pd
@@ -11,16 +12,17 @@ from HELP import get_multidimensional_combinations
 from test_model import test_model
 
 
-def get_parameters(input_data, output_data, n_neurons_steps=5):
+def get_MLP_parameters(input_data, output_data, n_neurons_steps=5):
     # get the parameter ranges according to the input and output data
     ranges = parameter_range.get_MLP_parameter_ranges(input_data, output_data)
+    pprint(ranges)
     # convert ranges to numpy arrays of actual values for grid search
     ranges["learning_rate_init"] = np.logspace(ranges["learning_rate_init"][0],
                                                ranges["learning_rate_init"][1],
                                                4)
     ranges["alpha"] = np.logspace(ranges["alpha"][0], ranges["alpha"][1], 5)
-    ranges["hidden_layer_sizes"] = parameter_range.get_architecture_suggestions(input_data, output_data,
-                                                                                n_neurons_steps=n_neurons_steps)
+    ranges["hidden_layer_sizes"] = parameter_range.get_hidden_layer_architecture_suggestions(input_data, output_data,
+                                                                                             n_neurons_steps=n_neurons_steps)
     # names of parameters
     parameter_names = list(ranges.keys())
     # possible values of parameters (list of lists)
@@ -46,8 +48,8 @@ def grid_search(model, input_data, output_data, data_title=None, model_name="",
     result_columns = ["fit_time", "test_balanced_accuracy", "test_f1_weighted",
                       "test_precision_weighted", "test_recall_weighted"]
 
-    param_names, _, param_combinations = get_parameters(input_data, output_data,
-                                                        n_neurons_steps=n_neurons_steps)
+    param_names, parameter_values, param_combinations = get_MLP_parameters(input_data, output_data,
+                                                            n_neurons_steps=n_neurons_steps)
     # pd.DataFrame with the results
     print(param_names + result_columns)
     all_results = pd.DataFrame(columns=param_names + result_columns)
@@ -87,9 +89,9 @@ def grid_search(model, input_data, output_data, data_title=None, model_name="",
     all_results.to_csv(f"data/results/grid_search_results_{data_title}_{model_name}_{current_time}.csv")
 
 def main():
-    with open("data/fertility/wine_x.pickle", "rb") as f:
+    with open("data/wine/wine_x.pickle", "rb") as f:
         input_data = pickle.load(f)
-    with open("data/fertility/wine_y.pickle", "rb") as f:
+    with open("data/wine/wine_y.pickle", "rb") as f:
         output_data = pickle.load(f)
 
     data_title = "wine"
