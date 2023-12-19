@@ -12,26 +12,6 @@ from HELP import get_multidimensional_combinations
 from test_model import test_model
 
 
-def get_MLP_parameters(input_data, output_data, n_neurons_steps=5):
-    # get the parameter ranges according to the input and output data
-    ranges = parameter_range.get_MLP_parameter_ranges(input_data, output_data)
-    pprint(ranges)
-    # convert ranges to numpy arrays of actual values for grid search
-    ranges["learning_rate_init"] = np.logspace(ranges["learning_rate_init"][0],
-                                               ranges["learning_rate_init"][1],
-                                               4)
-    ranges["alpha"] = np.logspace(ranges["alpha"][0], ranges["alpha"][1], 5)
-    ranges["hidden_layer_sizes"] = parameter_range.get_hidden_layer_architecture_suggestions(input_data, output_data,
-                                                                                             n_neurons_steps=n_neurons_steps)
-    # names of parameters
-    parameter_names = list(ranges.keys())
-    # possible values of parameters (list of lists)
-    parameter_values = list(ranges.values())
-
-    # all parameter combinations
-    parameter_combinations = get_multidimensional_combinations(parameter_values)
-    return parameter_names, parameter_values, parameter_combinations
-
 
 
 
@@ -48,9 +28,10 @@ def grid_search(model, input_data, output_data, data_title=None, model_name="",
     result_columns = ["fit_time", "test_balanced_accuracy", "test_f1_weighted",
                       "test_precision_weighted", "test_recall_weighted"]
 
-    param_names, parameter_values, param_combinations = get_MLP_parameters(input_data, output_data,
-                                                            n_neurons_steps=n_neurons_steps)
+    param_names, parameter_values, param_combinations = parameter_range.get_MLP_parameters(input_data, output_data,
+                                                                                          n_neurons_steps=n_neurons_steps)
     # pd.DataFrame with the results
+
     print(param_names + result_columns)
     all_results = pd.DataFrame(columns=param_names + result_columns)
 
